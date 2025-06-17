@@ -1,10 +1,12 @@
 from routes.insurance.model import Customdata, InsuranceListModel
 from routes.insurance.request_model import (
+    EnrollAccidentRequest,
     EnrollFastagRequest,
     EnrollFinanceRequest,
     EnrollHealthRequest,
     EnrollLifeRequest,
     EnrollMaintenanceRequest,
+    EnrollRenewalRequest,
 )
 from utility.utility import execute_stored_procedure, pdf_convert
 
@@ -148,5 +150,53 @@ async def EnrollMaintenance(data: EnrollMaintenanceRequest = None, staffId=None)
             ],
         )
         return "Maintenance enroll successfully...!"
+    except Exception as error:
+        raise Exception(str(error)) from error
+
+
+async def EnrollRenewal(data: EnrollRenewalRequest = None, staffId=None):
+    try:
+        result = await execute_stored_procedure(
+            proc_name="renewal_enroll",
+            params=[
+                staffId,
+                data.customer_id,
+                data.vehicle_no,
+                data.vehicle_name,
+                data.insurance_expiry_date,
+                data.fc_expiry_date,
+                data.premit_expiry_date,
+                data.pollution_expiry_date,
+            ],
+        )
+        return "Renewal enroll successfully...!"
+    except Exception as error:
+        raise Exception(str(error)) from error
+
+
+async def EnrollAccident(data: EnrollAccidentRequest = None, staffId=None):
+    try:
+        result = await execute_stored_procedure(
+            proc_name="accident_enroll",
+            params=[
+                staffId,
+                data.customer_id,
+                data.company_name,
+                data.vehicle_no,
+                data.vehicle_name,
+                data.vehicle_regn_name,
+                data.customer_mobile,
+                data.driver_name,
+                data.driver_mobile,
+                data.insurance_name,
+                data.fir_status,
+                data.surveyoyar_name,
+                data.surveyoyar_mobile,
+                data.quotation_amount,
+                data.bill_amount,
+                data.claim_amount,
+            ],
+        )
+        return "Accident enroll successfully...!"
     except Exception as error:
         raise Exception(str(error)) from error

@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 from routes.insurance.request_model import (
+    EnrollAccidentRequest,
     EnrollFinanceRequest,
     EnrollHealthRequest,
     EnrollLifeRequest,
     EnrollMaintenanceRequest,
+    EnrollRenewalRequest,
     InsuranceListRequest,
     PdfDownloadRequest,
     EnrollFastagRequest,
@@ -95,7 +97,8 @@ async def enroll_fastag(request: EnrollFastagRequest, user=Depends(token_validat
         )
     except Exception as error:
         return CustomResponse(status=False, code=400, message=str(error))
-    
+
+
 @insurance.post("/enroll_finance")
 async def enroll_finance(request: EnrollFinanceRequest, user=Depends(token_validator)):
     try:
@@ -108,11 +111,44 @@ async def enroll_finance(request: EnrollFinanceRequest, user=Depends(token_valid
         )
     except Exception as error:
         return CustomResponse(status=False, code=400, message=str(error))
-    
+
+
 @insurance.post("/enroll_maintenance")
-async def enroll_finance(request: EnrollMaintenanceRequest, user=Depends(token_validator)):
+async def enroll_finance(
+    request: EnrollMaintenanceRequest, user=Depends(token_validator)
+):
     try:
         result = await EnrollMaintenance(data=request, staffId=user.get("id"))
+        return CustomResponse(
+            status=True,
+            code=200,
+            message=result,
+            data={},
+        )
+    except Exception as error:
+        return CustomResponse(status=False, code=400, message=str(error))
+
+
+@insurance.post("/enroll_renewal")
+async def enroll_renewal(request: EnrollRenewalRequest, user=Depends(token_validator)):
+    try:
+        result = await EnrollRenewal(data=request, staffId=user.get("id"))
+        return CustomResponse(
+            status=True,
+            code=200,
+            message=result,
+            data={},
+        )
+    except Exception as error:
+        return CustomResponse(status=False, code=400, message=str(error))
+
+
+@insurance.post("/enroll_accident")
+async def enroll_accident(
+    request: EnrollAccidentRequest, user=Depends(token_validator)
+):
+    try:
+        result = await EnrollAccident(data=request, staffId=user.get("id"))
         return CustomResponse(
             status=True,
             code=200,

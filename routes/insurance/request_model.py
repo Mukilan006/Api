@@ -59,3 +59,31 @@ class EnrollMaintenanceRequest(CustomBaseModel):
     vehicle_no: str
     date: str
     kilometer: str
+
+
+class EnrollRenewalRequest(CustomBaseModel):
+    customer_id: int
+    vehicle_name: str
+    vehicle_no: str
+    insurance_expiry_date: str
+    fc_expiry_date: str
+    premit_expiry_date: str
+    pollution_expiry_date: str
+
+
+class EnrollAccidentRequest(CustomBaseModel):
+    customer_id: int
+    company_name: str
+    vehicle_no: str
+    vehicle_name: str
+    vehicle_regn_name: str
+    customer_mobile: str
+    driver_name: str
+    driver_mobile: str
+    insurance_name: str
+    fir_status: str
+    surveyoyar_name: str
+    surveyoyar_mobile: str
+    quotation_amount: str
+    bill_amount: str
+    claim_amount: str
