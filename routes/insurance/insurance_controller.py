@@ -1,0 +1,79 @@
+from fastapi import APIRouter, Depends
+from fastapi.responses import StreamingResponse
+from routes.insurance.request_model import (
+    EnrollHealthRequest,
+    EnrollLifeRequest,
+    InsuranceListRequest,
+    PdfDownloadRequest,
+)
+from routes.insurance.services import *
+from utility.custom_response import CustomResponse
+from utility.utility import token_validator
+
+
+insurance = APIRouter()
+
+
+@insurance.post("/insurance_list")
+async def insurance_list(request: InsuranceListRequest, user=Depends(token_validator)):
+    try:
+        result = await InsuranceList(page=request.page, pageSize=request.page_size)
+        return CustomResponse(
+            status=True,
+            message="Data Arrived",
+            code=200,
+            data=result,
+        )
+    except Exception as error:
+        return CustomResponse(status=False, code=400, message=str(error))
+
+
+@insurance.get("/get_insurance_title/{pare_key}")
+async def get_insurance_title(pare_key: str, user=Depends(token_validator)):
+    try:
+        result = await GetInsuranceTitle(pareKey=pare_key)
+        return CustomResponse(
+            status=True, message="insurance title arrived", code=200, data=result
+        )
+    except Exception as e:
+        return CustomResponse(status=False, message=str(e), code=400)
+
+
+@insurance.post("/download_pdf")
+async def download_pdf(req: PdfDownloadRequest):
+    try:
+        result = await DownloadPdf(pareKey=req.keys, fileds=req.selected_values)
+        return StreamingResponse(
+            result,
+            media_type="application/pdf",
+            headers={"Content-Disposition": "attachment; filename=report.pdf"},
+        )
+    except Exception as e:
+        return CustomResponse(status=False, message=str(e), code=400)
+
+
+@insurance.post("/enroll_health")
+async def enroll_health(request: EnrollHealthRequest, user=Depends(token_validator)):
+    try:
+        result = await EnrollHealth(data=request, staffId=user.get("id"))
+        return CustomResponse(
+            status=True,
+            code=200,
+            message=result,
+            data={},
+        )
+    except Exception as error:
+        return CustomResponse(status=False, code=400, message=str(error))
+    
+@insurance.post("/life_health")
+async def life_health(request: EnrollLifeRequest, user=Depends(token_validator)):
+    try:
+        result = await EnrollHealth(data=request, staffId=user.get("id"))
+        return CustomResponse(
+            status=True,
+            code=200,
+            message=result,
+            data={},
+        )
+    except Exception as error:
+        return CustomResponse(status=False, code=400, message=str(error))
