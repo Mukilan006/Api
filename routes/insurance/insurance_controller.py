@@ -1,10 +1,13 @@
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 from routes.insurance.request_model import (
+    EnrollFinanceRequest,
     EnrollHealthRequest,
     EnrollLifeRequest,
+    EnrollMaintenanceRequest,
     InsuranceListRequest,
     PdfDownloadRequest,
+    EnrollFastagRequest,
 )
 from routes.insurance.services import *
 from utility.custom_response import CustomResponse
@@ -64,11 +67,52 @@ async def enroll_health(request: EnrollHealthRequest, user=Depends(token_validat
         )
     except Exception as error:
         return CustomResponse(status=False, code=400, message=str(error))
-    
-@insurance.post("/life_health")
-async def life_health(request: EnrollLifeRequest, user=Depends(token_validator)):
+
+
+@insurance.post("/enroll_life")
+async def enroll_life(request: EnrollLifeRequest, user=Depends(token_validator)):
     try:
         result = await EnrollHealth(data=request, staffId=user.get("id"))
+        return CustomResponse(
+            status=True,
+            code=200,
+            message=result,
+            data={},
+        )
+    except Exception as error:
+        return CustomResponse(status=False, code=400, message=str(error))
+
+
+@insurance.post("/enroll_fastag")
+async def enroll_fastag(request: EnrollFastagRequest, user=Depends(token_validator)):
+    try:
+        result = await EnrollFastag(data=request, staffId=user.get("id"))
+        return CustomResponse(
+            status=True,
+            code=200,
+            message=result,
+            data={},
+        )
+    except Exception as error:
+        return CustomResponse(status=False, code=400, message=str(error))
+    
+@insurance.post("/enroll_finance")
+async def enroll_finance(request: EnrollFinanceRequest, user=Depends(token_validator)):
+    try:
+        result = await EnrollFinance(data=request, staffId=user.get("id"))
+        return CustomResponse(
+            status=True,
+            code=200,
+            message=result,
+            data={},
+        )
+    except Exception as error:
+        return CustomResponse(status=False, code=400, message=str(error))
+    
+@insurance.post("/enroll_maintenance")
+async def enroll_finance(request: EnrollMaintenanceRequest, user=Depends(token_validator)):
+    try:
+        result = await EnrollMaintenance(data=request, staffId=user.get("id"))
         return CustomResponse(
             status=True,
             code=200,

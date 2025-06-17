@@ -1,5 +1,11 @@
 from routes.insurance.model import Customdata, InsuranceListModel
-from routes.insurance.request_model import EnrollHealthRequest, EnrollLifeRequest
+from routes.insurance.request_model import (
+    EnrollFastagRequest,
+    EnrollFinanceRequest,
+    EnrollHealthRequest,
+    EnrollLifeRequest,
+    EnrollMaintenanceRequest,
+)
 from utility.utility import execute_stored_procedure, pdf_convert
 
 
@@ -85,5 +91,62 @@ async def EnrollLife(data: EnrollLifeRequest = None, staffId=None):
             ],
         )
         return "health insurance enroll successfully...!"
+    except Exception as error:
+        raise Exception(str(error)) from error
+
+
+async def EnrollFastag(data: EnrollFastagRequest = None, staffId=None):
+    try:
+        result = await execute_stored_procedure(
+            proc_name="fastag_enroll",
+            params=[
+                staffId,
+                data.customer_id,
+                data.fastag_name,
+                data.vehicle_no,
+                data.vehicle_name,
+                data.mobile,
+                data.bank_name,
+            ],
+        )
+        return "Fastag enroll successfully...!"
+    except Exception as error:
+        raise Exception(str(error)) from error
+
+
+async def EnrollFinance(data: EnrollFinanceRequest = None, staffId=None):
+    try:
+        result = await execute_stored_procedure(
+            proc_name="finacnce_enroll",
+            params=[
+                staffId,
+                data.customer_id,
+                data.finance_name,
+                data.vehicle_no,
+                data.from_date,
+                data.to_date,
+                data.emi_amount,
+            ],
+        )
+        return "Finance enroll successfully...!"
+    except Exception as error:
+        raise Exception(str(error)) from error
+
+
+async def EnrollMaintenance(data: EnrollMaintenanceRequest = None, staffId=None):
+    try:
+        result = await execute_stored_procedure(
+            proc_name="maintenance_enroll",
+            params=[
+                staffId,
+                data.customer_id,
+                data.purpose,
+                data.vehicle_name,
+                data.vehicle_no,
+                data.date,
+                data.kilometer,
+            ],
+        )
+        return "Maintenance enroll successfully...!"
     except Exception as error:
         raise Exception(str(error)) from error
