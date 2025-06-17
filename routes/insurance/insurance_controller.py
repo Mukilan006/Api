@@ -8,6 +8,7 @@ from routes.insurance.request_model import (
     EnrollMaintenanceRequest,
     EnrollRenewalRequest,
     InsuranceListRequest,
+    InsuranceUpdateRequest,
     PdfDownloadRequest,
     EnrollFastagRequest,
 )
@@ -149,6 +150,21 @@ async def enroll_accident(
 ):
     try:
         result = await EnrollAccident(data=request, staffId=user.get("id"))
+        return CustomResponse(
+            status=True,
+            code=200,
+            message=result,
+            data={},
+        )
+    except Exception as error:
+        return CustomResponse(status=False, code=400, message=str(error))
+    
+@insurance.post("/status_update")
+async def status_update(
+    request: InsuranceUpdateRequest, user=Depends(token_validator)
+):
+    try:
+        result = await StatusUpdate(data=request)
         return CustomResponse(
             status=True,
             code=200,

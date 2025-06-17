@@ -87,3 +87,7 @@ class EnrollAccidentRequest(CustomBaseModel):
     quotation_amount: str
     bill_amount: str
     claim_amount: str
+
+class InsuranceUpdateRequest(CustomBaseModel):
+    id:int
+    status:bool

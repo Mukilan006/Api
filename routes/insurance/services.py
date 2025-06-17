@@ -7,6 +7,7 @@ from routes.insurance.request_model import (
     EnrollLifeRequest,
     EnrollMaintenanceRequest,
     EnrollRenewalRequest,
+    InsuranceUpdateRequest,
 )
 from utility.utility import execute_stored_procedure, pdf_convert
 
@@ -198,5 +199,16 @@ async def EnrollAccident(data: EnrollAccidentRequest = None, staffId=None):
             ],
         )
         return "Accident enroll successfully...!"
+    except Exception as error:
+        raise Exception(str(error)) from error
+
+
+async def StatusUpdate(data: InsuranceUpdateRequest = None, staffId=None):
+    try:
+        result = await execute_stored_procedure(
+            proc_name="status_update",
+            params=[data.id, "Insurance", "", data.status],
+        )
+        return "Insurance status updated successfully...!"
     except Exception as error:
         raise Exception(str(error)) from error

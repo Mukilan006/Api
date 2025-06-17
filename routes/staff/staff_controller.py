@@ -3,6 +3,7 @@ from routes.staff.request_model import (
     CustomerListRequest,
     CustomerRegisterRequest,
     StaffListRequest,
+    StaffUpdateRequest,
 )
 from routes.staff.services import *
 from utility.custom_response import CustomResponse
@@ -87,3 +88,18 @@ async def customer_details(customer_id=str,user=Depends(token_validator)):
         )
     except Exception as error:
         return CustomResponse(code=400, status=False, message=str(error))
+    
+@staff.post("/status_update")
+async def status_update(
+    request: StaffUpdateRequest, user=Depends(token_validator)
+):
+    try:
+        result = await StatusUpdate(data=request)
+        return CustomResponse(
+            status=True,
+            code=200,
+            message=result,
+            data={},
+        )
+    except Exception as error:
+        return CustomResponse(status=False, code=400, message=str(error))

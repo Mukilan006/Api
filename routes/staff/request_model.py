@@ -18,3 +18,7 @@ class CustomerRegisterRequest(CustomBaseModel):
     last_name: str
     mobile: str
     gender: str
+
+class StaffUpdateRequest(CustomBaseModel):
+    id:int
+    status:bool

@@ -1,5 +1,6 @@
 import json
 from routes.staff.model import *
+from routes.staff.request_model import StaffUpdateRequest
 from utility.utility import execute_stored_procedure
 
 
@@ -84,3 +85,14 @@ async def CustomerDetails(customerId: str = None):
         return outResult
     except Exception as error:
         raise Exception(str(error.args))
+
+
+async def StatusUpdate(data: StaffUpdateRequest = None, staffId=None):
+    try:
+        result = await execute_stored_procedure(
+            proc_name="status_update",
+            params=[data.id, "Staff", "", data.status],
+        )
+        return "Staff status updated successfully...!"
+    except Exception as error:
+        raise Exception(str(error)) from error
