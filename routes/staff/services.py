@@ -58,6 +58,31 @@ async def CustomerList(fromDate=None, toDate=None, pageNo=None, pageSize=None):
         return outResult.to_json()
     except Exception as error:
         raise Exception(str(error.args))
+async def CustomerSearch(letter=None):
+    try:
+        result = await execute_stored_procedure(
+            proc_name="get_staff_search", params=[letter]
+        )
+        outResult = CustomerListModel(
+               total_records=len(result),
+               current_page=0,
+            customer_list=[
+                CustomerDetailsModel(
+                    id=item["id"],
+                    first_name=item["first_name"],
+                    mobile=item["mobile"],
+                    gender=item["gender"],
+                    created_date=item["created_date"],
+                    enrolled_insurances = json.loads(item["enrolled_insurances"]) if item.get("enrolled_insurances") else [],
+                    enrolled_date=item["enrolled_date"],
+                    status=item["status"],
+                )
+                for item in result[0]
+            ],
+        )
+        return outResult.to_json()
+    except Exception as error:
+        raise Exception(str(error.args))
 
 
 async def CustomerRegister(

@@ -88,6 +88,20 @@ async def customer_details(customer_id=str,user=Depends(token_validator)):
         )
     except Exception as error:
         return CustomResponse(code=400, status=False, message=str(error))
+# Customer Search
+CustomerSearch
+@staff.get("/customer_search/{customer_letter}")
+async def customer_search(customer_letter=str,user=Depends(token_validator)):
+    try:
+        result = await CustomerSearch(letter=customer_letter)
+        return CustomResponse(
+            status=True,
+            code=200,
+            message="Customer Insurance Data Arrived Successfully..!",
+            data=result,
+        )
+    except Exception as error:
+        return CustomResponse(code=400, status=False, message=str(error))
     
 @staff.post("/status_update")
 async def status_update(
