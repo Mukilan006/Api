@@ -22,3 +22,9 @@ class CustomerRegisterRequest(CustomBaseModel):
 class StaffUpdateRequest(CustomBaseModel):
     id:int
     status:bool
+    
+    
+class UserUpdateRequest(CustomBaseModel):
+    first_name:str
+    last_name:str
+    gender:str

@@ -121,3 +121,14 @@ async def StatusUpdate(data: StaffUpdateRequest = None, staffId=None):
         return "Staff status updated successfully...!"
     except Exception as error:
         raise Exception(str(error)) from error
+
+
+async def UserUpdate(id = None,first_name =None,last_name=None,gender = None,tag=None):
+    try:
+        result = await execute_stored_procedure(
+            proc_name="get_user_update",
+            params=[id,first_name,last_name,gender,tag],
+        )
+        return f"{tag} updated successfully...!"
+    except Exception as error:
+        raise Exception(str(error)) from error

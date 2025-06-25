@@ -4,6 +4,7 @@ from routes.staff.request_model import (
     CustomerRegisterRequest,
     StaffListRequest,
     StaffUpdateRequest,
+    UserUpdateRequest,
 )
 from routes.staff.services import *
 from utility.custom_response import CustomResponse
@@ -109,6 +110,34 @@ async def status_update(
 ):
     try:
         result = await StatusUpdate(data=request)
+        return CustomResponse(
+            status=True,
+            code=200,
+            message=result,
+            data={},
+        )
+    except Exception as error:
+        return CustomResponse(status=False, code=400, message=str(error))
+    
+    
+@staff.post("/staff_update/{id}")
+async def staff_update(id: int, request: UserUpdateRequest ):
+    try:
+        print(request)
+        result = await UserUpdate(id=id,first_name=request.first_name,last_name=request.last_name,gender=request.gender,tag="staff")
+        return CustomResponse(
+            status=True,
+            code=200,
+            message=result,
+            data={},
+        )
+    except Exception as error:
+        return CustomResponse(status=False, code=400, message=str(error))
+
+@staff.post("/customer_update/{id}")
+async def staff_update(id: int, request: UserUpdateRequest):
+    try:
+        result = await UserUpdate(id=id,first_name=request.first_name,last_name=request.last_name,gender=request.gender,tag="customer")
         return CustomResponse(
             status=True,
             code=200,
