@@ -2,8 +2,10 @@ from fastapi import APIRouter, Depends
 from routes.staff.request_model import (
     CustomerListRequest,
     CustomerRegisterRequest,
+    CustomerUpdateRequest,
     StaffListRequest,
     StaffUpdateRequest,
+    UserUpdateRequest,
 )
 from routes.staff.services import *
 from utility.custom_response import CustomResponse
@@ -75,9 +77,10 @@ async def customer_register(
         )
     except Exception as error:
         return CustomResponse(code=400, status=False, message=str(error))
-    
+
+
 @staff.get("/customer_details/{customer_id}")
-async def customer_details(customer_id=str,user=Depends(token_validator)):
+async def customer_details(customer_id=str, user=Depends(token_validator)):
     try:
         result = await CustomerDetails(customerId=customer_id)
         return CustomResponse(
@@ -88,13 +91,71 @@ async def customer_details(customer_id=str,user=Depends(token_validator)):
         )
     except Exception as error:
         return CustomResponse(code=400, status=False, message=str(error))
-    
+
+
+# Customer Search
+CustomerSearch
+
+
+@staff.get("/customer_search/{customer_letter}")
+async def customer_search(customer_letter=str, user=Depends(token_validator)):
+    try:
+        result = await CustomerSearch(letter=customer_letter)
+        return CustomResponse(
+            status=True,
+            code=200,
+            message="Customer Insurance Data Arrived Successfully..!",
+            data=result,
+        )
+    except Exception as error:
+        return CustomResponse(code=400, status=False, message=str(error))
+
+
 @staff.post("/status_update")
-async def status_update(
-    request: StaffUpdateRequest, user=Depends(token_validator)
-):
+async def status_update(request: StaffUpdateRequest, user=Depends(token_validator)):
     try:
         result = await StatusUpdate(data=request)
+        return CustomResponse(
+            status=True,
+            code=200,
+            message=result,
+            data={},
+        )
+    except Exception as error:
+        return CustomResponse(status=False, code=400, message=str(error))
+
+
+@staff.post("/staff_update/{id}")
+async def staff_update(id: int, request: StaffUpdateRequest):
+    try:
+        result = await UserUpdate(
+            id=id,
+            first_name=request.first_name,
+            last_name=request.last_name,
+            gender=request.gender,
+            password = request.password,
+            tag="staff",
+        )
+        return CustomResponse(
+            status=True,
+            code=200,
+            message=result,
+            data={},
+        )
+    except Exception as error:
+        return CustomResponse(status=False, code=400, message=str(error))
+
+
+@staff.post("/customer_update/{id}")
+async def customer_update(id: int, request: CustomerUpdateRequest):
+    try:
+        result = await UserUpdate(
+            id=id,
+            first_name=request.first_name,
+            last_name=request.last_name,
+            gender=request.gender,
+            tag="customer",
+        )
         return CustomResponse(
             status=True,
             code=200,

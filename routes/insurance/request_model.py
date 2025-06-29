@@ -67,7 +67,7 @@ class EnrollRenewalRequest(CustomBaseModel):
     vehicle_no: str
     insurance_expiry_date: str
     fc_expiry_date: str
-    premit_expiry_date: str
+    permit_expiry_date: str
     pollution_expiry_date: str
 
 
@@ -88,6 +88,7 @@ class EnrollAccidentRequest(CustomBaseModel):
     bill_amount: str
     claim_amount: str
 
+
 class InsuranceUpdateRequest(CustomBaseModel):
-    id:int
-    status:bool
+    id: int
+    status: bool
