@@ -166,7 +166,7 @@ async def EnrollRenewal(data: EnrollRenewalRequest = None, staffId=None):
                 data.vehicle_name,
                 data.insurance_expiry_date,
                 data.fc_expiry_date,
-                data.premit_expiry_date,
+                data.permit_expiry_date,
                 data.pollution_expiry_date,
             ],
         )

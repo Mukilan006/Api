@@ -58,14 +58,16 @@ async def CustomerList(fromDate=None, toDate=None, pageNo=None, pageSize=None):
         return outResult.to_json()
     except Exception as error:
         raise Exception(str(error.args))
+
+
 async def CustomerSearch(letter=None):
     try:
         result = await execute_stored_procedure(
             proc_name="get_staff_search", params=[letter]
         )
         outResult = CustomerListModel(
-               total_records=len(result),
-               current_page=0,
+            total_records=len(result),
+            current_page=0,
             customer_list=[
                 CustomerDetailsModel(
                     id=item["id"],
@@ -73,7 +75,11 @@ async def CustomerSearch(letter=None):
                     mobile=item["mobile"],
                     gender=item["gender"],
                     created_date=item["created_date"],
-                    enrolled_insurances = json.loads(item["enrolled_insurances"]) if item.get("enrolled_insurances") else [],
+                    enrolled_insurances=(
+                        json.loads(item["enrolled_insurances"])
+                        if item.get("enrolled_insurances")
+                        else []
+                    ),
                     enrolled_date=item["enrolled_date"],
                     status=item["status"],
                 )
@@ -118,16 +124,18 @@ async def StatusUpdate(data: StaffUpdateRequest = None, staffId=None):
             proc_name="status_update",
             params=[data.id, "Staff", "", data.status],
         )
-        return "Staff status updated successfully...!"
+        return "Status updated successfully...!"
     except Exception as error:
         raise Exception(str(error)) from error
 
 
-async def UserUpdate(id = None,first_name =None,last_name=None,gender = None,tag=None):
+async def UserUpdate(
+    id=None, first_name=None, last_name=None, gender=None, tag=None, password=None
+):
     try:
         result = await execute_stored_procedure(
             proc_name="get_user_update",
-            params=[id,first_name,last_name,gender,tag],
+            params=[id, first_name, last_name, gender, password, tag],
         )
         return f"{tag} updated successfully...!"
     except Exception as error:

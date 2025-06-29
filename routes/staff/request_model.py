@@ -19,12 +19,19 @@ class CustomerRegisterRequest(CustomBaseModel):
     mobile: str
     gender: str
 
+
 class StaffUpdateRequest(CustomBaseModel):
-    id:int
-    status:bool
-    
-    
-class UserUpdateRequest(CustomBaseModel):
-    first_name:str
-    last_name:str
-    gender:str
+    id: int
+    status: bool
+
+
+class StaffUpdateRequest(CustomBaseModel):
+    first_name: str
+    last_name: str
+    gender: str
+    password : str
+
+class CustomerUpdateRequest(CustomBaseModel):
+    first_name: str
+    last_name: str
+    gender: str
