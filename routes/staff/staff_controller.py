@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends
 from routes.staff.request_model import (
+    ChangePasswordRequest,
     CustomerListRequest,
     CustomerRegisterRequest,
     CustomerUpdateRequest,
     StaffListRequest,
     StaffUpdateRequest,
-    UserUpdateRequest,
+ 
 )
 from routes.staff.services import *
 from utility.custom_response import CustomResponse
@@ -92,13 +93,8 @@ async def customer_details(customer_id=str, user=Depends(token_validator)):
     except Exception as error:
         return CustomResponse(code=400, status=False, message=str(error))
 
-
-# Customer Search
-CustomerSearch
-
-
 @staff.get("/customer_search/{customer_letter}")
-async def customer_search(customer_letter=str, user=Depends(token_validator)):
+async def customerSearch(customer_letter=str, user=Depends(token_validator)):
     try:
         result = await CustomerSearch(letter=customer_letter)
         return CustomResponse(
@@ -112,7 +108,7 @@ async def customer_search(customer_letter=str, user=Depends(token_validator)):
 
 
 @staff.post("/status_update")
-async def status_update(request: StaffUpdateRequest, user=Depends(token_validator)):
+async def statusUpdate(request: StaffUpdateRequest, user=Depends(token_validator)):
     try:
         result = await StatusUpdate(data=request)
         return CustomResponse(
@@ -126,7 +122,7 @@ async def status_update(request: StaffUpdateRequest, user=Depends(token_validato
 
 
 @staff.post("/staff_update/{id}")
-async def staff_update(id: int, request: StaffUpdateRequest):
+async def staffUpdate(id: int, request: StaffUpdateRequest):
     try:
         result = await UserUpdate(
             id=id,
@@ -147,7 +143,7 @@ async def staff_update(id: int, request: StaffUpdateRequest):
 
 
 @staff.post("/customer_update/{id}")
-async def customer_update(id: int, request: CustomerUpdateRequest):
+async def customerUpdate(id: int, request: CustomerUpdateRequest):
     try:
         result = await UserUpdate(
             id=id,
@@ -162,5 +158,26 @@ async def customer_update(id: int, request: CustomerUpdateRequest):
             message=result,
             data={},
         )
+    except Exception as error:
+        return CustomResponse(status=False, code=400, message=str(error))
+
+@staff.post("/changepassword")
+async def ChangePassword(data: ChangePasswordRequest,user=Depends(token_validator)):
+    try:
+        valid = await execute_stored_procedure(
+            proc_name="change_password", params=[user.get("id"),data.old_password,data.new_password], is_one=True
+        )
+        validator = valid.get("success")
+        if validator:
+            return CustomResponse(
+            status=True,
+            code=200,
+            message="sucessflly Change password",
+            data={},
+        )
+        else:
+            return CustomResponse(status=False, code=400, message="Incorrect old password or ID not found")
+            
+ 
     except Exception as error:
         return CustomResponse(status=False, code=400, message=str(error))
