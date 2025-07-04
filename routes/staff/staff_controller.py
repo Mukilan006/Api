@@ -172,12 +172,12 @@ async def ChangePassword(data: ChangePasswordRequest,user=Depends(token_validato
             return CustomResponse(
             status=True,
             code=200,
-            message="sucessflly Change password",
+            message="Password Change Successfully",
             data={},
         )
         else:
             return CustomResponse(status=False, code=400, message="Incorrect old password or ID not found")
-            
- 
+        
     except Exception as error:
         return CustomResponse(status=False, code=400, message=str(error))
+    
