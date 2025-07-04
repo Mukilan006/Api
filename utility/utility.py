@@ -9,7 +9,7 @@ from database import get_connection
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib.pagesizes import A4, landscape, portrait
 from reportlab.lib import colors
-
+import httpx
 
 settings = Settings()
 
@@ -204,3 +204,22 @@ async def pdf_convert(datas=None, fields=None):
         return buffer
     except Exception as e:
         raise Exception(str(e))
+
+   
+
+async def method_service(url=None, params=None, method=None):
+    method = (method or "").lower()
+    async with httpx.AsyncClient() as client:
+        actions = {
+            "get": lambda: client.get(url, params=None, auth=None),
+            "post": lambda: client.post(url, data=params, auth=None)
+        }
+
+        try:
+            if method not in actions:
+                raise ValueError("Invalid method")
+
+            response = await actions[method]()
+            return response.json()  # or response.text use-->
+        except Exception as error:
+            raise Exception(f"Request failed: {error}") from error
