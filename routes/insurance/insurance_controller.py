@@ -73,9 +73,9 @@ async def enroll_health(request: EnrollHealthRequest, user=Depends(token_validat
 
 
 @insurance.post("/enroll_life")
-async def enroll_life(request: EnrollLifeRequest, user=Depends(token_validator)):
+async def enroll_life(request: EnrollLifeRequest):
     try:
-        result = await EnrollHealth(data=request, staffId=user.get("id"))
+        result = await EnrollLife(data=request)
         return CustomResponse(
             status=True,
             code=200,
@@ -158,11 +158,10 @@ async def enroll_accident(
         )
     except Exception as error:
         return CustomResponse(status=False, code=400, message=str(error))
-    
+
+
 @insurance.post("/status_update")
-async def status_update(
-    request: InsuranceUpdateRequest, user=Depends(token_validator)
-):
+async def status_update(request: InsuranceUpdateRequest, user=Depends(token_validator)):
     try:
         result = await StatusUpdate(data=request)
         return CustomResponse(

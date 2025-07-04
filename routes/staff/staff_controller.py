@@ -4,8 +4,7 @@ from routes.staff.request_model import (
     CustomerRegisterRequest,
     CustomerUpdateRequest,
     StaffListRequest,
-    StaffUpdateRequest,
-    UserUpdateRequest,
+    StaffUpdateRequest
 )
 from routes.staff.services import *
 from utility.custom_response import CustomResponse
@@ -94,8 +93,6 @@ async def customer_details(customer_id=str, user=Depends(token_validator)):
 
 
 # Customer Search
-CustomerSearch
-
 
 @staff.get("/customer_search/{customer_letter}")
 async def customer_search(customer_letter=str, user=Depends(token_validator)):
@@ -133,7 +130,7 @@ async def staff_update(id: int, request: StaffUpdateRequest):
             first_name=request.first_name,
             last_name=request.last_name,
             gender=request.gender,
-            password = request.password,
+            password=request.password,
             tag="staff",
         )
         return CustomResponse(

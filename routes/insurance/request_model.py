@@ -47,6 +47,7 @@ class EnrollFinanceRequest(CustomBaseModel):
     customer_id: int
     finance_name: str
     vehicle_no: str
+    vehicle_name: str
     from_date: str
     to_date: str
     emi_amount: str

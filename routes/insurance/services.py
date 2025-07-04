@@ -83,7 +83,7 @@ async def EnrollLife(data: EnrollLifeRequest = None, staffId=None):
             proc_name="life_enroll",
             params=[
                 data.customer_id,
-                staffId,
+                1,
                 data.company_name,
                 data.policy_number,
                 data.mobile,
@@ -93,7 +93,7 @@ async def EnrollLife(data: EnrollLifeRequest = None, staffId=None):
                 data.idv,
             ],
         )
-        return "health insurance enroll successfully...!"
+        return "life insurance enroll successfully...!"
     except Exception as error:
         raise Exception(str(error)) from error
 
@@ -129,6 +129,7 @@ async def EnrollFinance(data: EnrollFinanceRequest = None, staffId=None):
                 data.from_date,
                 data.to_date,
                 data.emi_amount,
+                data.vehicle_name
             ],
         )
         return "Finance enroll successfully...!"

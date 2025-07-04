@@ -38,6 +38,7 @@ async def CustomerList(fromDate=None, toDate=None, pageNo=None, pageSize=None):
         result = await execute_stored_procedure(
             proc_name="get_customer_list", params=[pageNo, pageSize, fromDate, toDate]
         )
+        print(result)
         outResult = CustomerListModel(
             total_records=result[0][0].get("total_record"),
             current_page=pageNo,
@@ -48,8 +49,16 @@ async def CustomerList(fromDate=None, toDate=None, pageNo=None, pageSize=None):
                     mobile=item["mobile"],
                     gender=item["gender"],
                     created_date=item["created_date"],
-                    enrolled_insurances=json.loads(item["enrolled_insurances"]),
-                    enrolled_date=item["enrolled_date"],
+                    enrolled_insurances=(
+                        json.loads(item["enrolled_insurances"])
+                        if item["enrolled_insurances"] is not None
+                        else []
+                    ),
+                    enrolled_date=(
+                        item["enrolled_date"]
+                        if item["enrolled_date"] is not None
+                        else ""
+                    ),
                     status=item["status"],
                 )
                 for item in result[1]
